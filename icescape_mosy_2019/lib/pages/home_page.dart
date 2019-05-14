@@ -86,14 +86,11 @@ class _HomePageState extends State<HomePage> {
     return columns;
   }
 
-
-
   @override
   void initState() {
     super.initState();
-    manager.initialize().then((_){
-      manager.write("This is flutter"); // test
-    });   // Initializes bluetooth and connects to Arduino
+    manager.initialize(); // Initializes bluetooth and connects to Arduino
+    manager.startScan();
     for (int i = 0; i < ROW_COUNT; i++) {
       List<bool> temp = List<bool>(COLUMN_COUNT);
       for (int j = 0; j < COLUMN_COUNT; j++) {
@@ -102,6 +99,12 @@ class _HomePageState extends State<HomePage> {
       PRESSED_BUTTONS_MATRIX.add(temp);
       reversedColumn = false;
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  //  manager.dispose();
   }
 
   @override
@@ -114,7 +117,6 @@ class _HomePageState extends State<HomePage> {
           child: IconButton(
               icon: Icon(
                 Icons.menu,
-
               ),
               onPressed: null),
         ),
@@ -137,6 +139,11 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          //manager.write("This is flutter\n");
+        },
       ),
     );
   }
