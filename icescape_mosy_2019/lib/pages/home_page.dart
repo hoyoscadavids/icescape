@@ -14,7 +14,8 @@ final double HEXAGON_BUTTON_SIZE = 30; // 100 for tablet
 final double HEXAGON_SIZE = HEXAGON_BUTTON_SIZE * 0.15;
 
 class _HomePageState extends State<HomePage> {
-  List<List<bool>> PRESSED_BUTTONS_MATRIX = List<List<bool>>();
+  List<List<bool>> pressedButtonsMatrix = List<List<bool>>();
+  // TODO Change colors when pressed
   final int ROW_COUNT = 5, COLUMN_COUNT = 10;
 
   // The extra index in field is used because the field is not divided as a matrix
@@ -38,9 +39,10 @@ class _HomePageState extends State<HomePage> {
         height: HEXAGON_BUTTON_SIZE,
         width: HEXAGON_BUTTON_SIZE,
         child: HexagonalButton(
-          color: Colors.black,
+          color: Colors.lightBlue,
           size: HEXAGON_SIZE,
-          onPressed: () {},
+          onPressed: () {
+          },
         ),
       );
     } else {
@@ -96,7 +98,7 @@ class _HomePageState extends State<HomePage> {
       for (int j = 0; j < COLUMN_COUNT; j++) {
         temp[j] = false;
       }
-      PRESSED_BUTTONS_MATRIX.add(temp);
+      pressedButtonsMatrix.add(temp);
       reversedColumn = false;
     }
   }
