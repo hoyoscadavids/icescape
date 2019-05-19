@@ -14,7 +14,7 @@ class HexagonalButton extends StatelessWidget {
     return Container(
       height: this.size,
       width: this.size,
-      child: MaterialButton(
+      child: FlatButton(
         key: this.key,
         shape: PolygonBorder(
           borderRadius: -this.size,

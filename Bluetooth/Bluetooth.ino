@@ -1,14 +1,14 @@
-#define BTSerial Serial1
+#define BTSerial Serial
 #define BAUD 115200
 
 void setup() {
     BTSerial.begin(BAUD);
     Serial.begin(BAUD);
+    Serial.println("Started");
 }
 
 void loop() {
     String data = BTSerial.readStringUntil('\n');
-
 
 
     if (data.length() > 0){
@@ -17,4 +17,3 @@ void loop() {
     }
 
 }
-

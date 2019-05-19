@@ -3,6 +3,9 @@ import 'package:icescape_mosy_2019/widgets/hexagonal_button.dart';
 import 'package:icescape_mosy_2019/utilities/bluetooth_manager.dart';
 
 class HomePage extends StatefulWidget {
+  final BluetoothManager bluetoothManager;
+
+  const HomePage({Key key, this.bluetoothManager}) : super(key: key);
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -13,7 +16,6 @@ final double HEXAGON_SIZE = HEXAGON_BUTTON_SIZE * 0.15;
 class _HomePageState extends State<HomePage> {
   List<List<bool>> PRESSED_BUTTONS_MATRIX = List<List<bool>>();
   final int ROW_COUNT = 5, COLUMN_COUNT = 10;
-  final BluetoothManager manager = BluetoothManager();
 
   // The extra index in field is used because the field is not divided as a matrix
   // but instead a one dimensional array
@@ -89,8 +91,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    manager.initialize(); // Initializes bluetooth and connects to Arduino
-    manager.startScan();
     for (int i = 0; i < ROW_COUNT; i++) {
       List<bool> temp = List<bool>(COLUMN_COUNT);
       for (int j = 0; j < COLUMN_COUNT; j++) {
@@ -104,7 +104,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     super.dispose();
-  //  manager.dispose();
   }
 
   @override
@@ -112,18 +111,9 @@ class _HomePageState extends State<HomePage> {
     final SCREEN_LENGTH = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.only(right: 24.0),
-          child: IconButton(
-              icon: Icon(
-                Icons.menu,
-              ),
-              onPressed: null),
-        ),
         title: Text(
           "Icescape",
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 18),
         ),
       ),
       body: Column(
@@ -142,7 +132,7 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          //manager.write("This is flutter\n");
+          widget.bluetoothManager.write("This is flutter\n");
         },
       ),
     );
