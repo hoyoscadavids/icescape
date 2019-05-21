@@ -141,11 +141,16 @@ class _HomePageState extends State<HomePage> {
           String sendString;
           Random rnd = Random();
           sendData["data"] = List<int>();
-          for(int i = 0; i < 48; i++ ){
-            sendData["data"].add(rnd.nextInt(2));
-            sendString = jsonEncode(sendData);
-          }
+          for(int j = 0; j < 3; j++) {
+            sendString = "";
+            sendString += j.toString() + "+";
+            for (int i = 0; i < 16; i++) {
+              sendString += rnd.nextInt(2).toString();
+            }
+            sendString += j.toString() + "-";
           widget.bluetoothManager.write(sendString);
+          }
+
         },
       ),
     );

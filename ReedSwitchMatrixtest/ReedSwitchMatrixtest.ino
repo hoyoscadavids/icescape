@@ -10,7 +10,7 @@ LPD8806 strip = LPD8806(nLEDs, dataPin, clockPin);
 
 void setup() {
  BTSerial.begin(BAUD);
- Serial1.begin(BAUD);
+ Serial.begin(BAUD);
  
  pinMode(2, INPUT_PULLUP);
  pinMode(3, INPUT_PULLUP);
@@ -31,6 +31,7 @@ void setup() {
 
  strip.begin();
  strip.show();
+ colorWipe(strip.Color(  127,   127, 127), 50);
 }
 
 void setPinLow(int pin){
@@ -40,6 +41,7 @@ void setPinLow(int pin){
    
    digitalWrite(i+22, PinLevel);
   }
+
 }
 
 void colorWipe(uint32_t c, uint8_t wait) {
@@ -48,31 +50,39 @@ void colorWipe(uint32_t c, uint8_t wait) {
   for (i=0; i < strip.numPixels(); i++) {
       strip.setPixelColor(i, c);
       strip.show();
-      delay(wait);
+ //     delay(wait);
   }
+
 }
 
 void loop() {
- String data = BTSerial.readStringUntil('\n');
- if (data.length() > 0){
-        Serial1.println("I got this String: ");
-        Serial1.println(data);
+  
+ 
+ if(BTSerial.available()){
+  String data = BTSerial.readStringUntil('\n');
+   if (data.length() > 0){
+        Serial.println("I got this String: ");
+        Serial.println(data);
  }
-  colorWipe(strip.Color(  127,   127, 127), 50);
-    for(int zeile = 0; zeile < 10; zeile++) {
-        setPinLow(zeile);
-        for(int i=0; i<5; i++){
-            Serial1.print( digitalRead(2 + i) );
-            if (digitalRead == LOW){
-              strip.setPixelColor(22+i, 0, 127, 127);
-              strip.show(); 
-            }
-             
+}
+ 
+
+  for(int zeile = 0; zeile < 10; zeile++) {
+    setPinLow(zeile);
+    for(int i=0; i<5; i++){
+        Serial.print( digitalRead(2 + i) );
+        if (digitalRead == LOW){
+ //         strip.setPixelColor(22+i, 0, 127, 127);
+ //         strip.show(); 
         }
-        Serial1.println("");
+         
     }
-    Serial1.println("---------------------------");
-    delay(500);
+    Serial.println("");
+  }
+  Serial.println("---------------------------");
+  delay(200);
+
+
 }
 /*
  for (int i = 0; i < 10; i++){
