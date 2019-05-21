@@ -1,3 +1,5 @@
+import 'dart:math';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:icescape_mosy_2019/widgets/hexagonal_button.dart';
 import 'package:icescape_mosy_2019/utilities/bluetooth_manager.dart';
@@ -110,7 +112,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final SCREEN_LENGTH = MediaQuery.of(context).size.width;
+    final width = MediaQuery.of(context).size.width;
+    final widthDivider = 12;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -122,11 +125,11 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(top: 0, bottom: 24),
+            padding: EdgeInsets.fromLTRB(width /widthDivider, 0, width/widthDivider, 0),
             child: SingleChildScrollView(
               child: Row(
                 children: <Widget>[]
-                  ..addAll(_buildGrid(COLUMN_COUNT, SCREEN_LENGTH)),
+                  ..addAll(_buildGrid(COLUMN_COUNT, width)),
               ),
             ),
           ),
@@ -134,7 +137,15 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          widget.bluetoothManager.write("This is flutter\n");
+          Map<String, dynamic> sendData = Map<String, dynamic> ();
+          String sendString;
+          Random rnd = Random();
+          sendData["data"] = List<int>();
+          for(int i = 0; i < 48; i++ ){
+            sendData["data"].add(rnd.nextInt(2));
+            sendString = jsonEncode(sendData);
+          }
+          widget.bluetoothManager.write(sendString);
         },
       ),
     );
