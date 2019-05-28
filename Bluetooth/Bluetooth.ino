@@ -1,4 +1,4 @@
-#define BTSerial Serial
+#define BTSerial Serial1
 #define BAUD 115200
 
 void setup() {
