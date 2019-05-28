@@ -43,8 +43,7 @@ class _HomePageState extends State<HomePage> {
         child: HexagonalButton(
           color: Colors.lightBlue,
           size: HEXAGON_SIZE,
-          onPressed: () {
-          },
+          onPressed: () {},
         ),
       );
     } else {
@@ -125,11 +124,11 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.fromLTRB(width /widthDivider, 0, width/widthDivider, 0),
+            padding: EdgeInsets.fromLTRB(
+                width / widthDivider, 0, width / widthDivider, 0),
             child: SingleChildScrollView(
               child: Row(
-                children: <Widget>[]
-                  ..addAll(_buildGrid(COLUMN_COUNT, width)),
+                children: <Widget>[]..addAll(_buildGrid(COLUMN_COUNT, width)),
               ),
             ),
           ),
@@ -137,20 +136,21 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Map<String, dynamic> sendData = Map<String, dynamic> ();
-          String sendString;
+          Map<String, dynamic> sendData = Map<String, dynamic>();
+          List<String> sendStrings = List<String>();
           Random rnd = Random();
           sendData["data"] = List<int>();
-          for(int j = 0; j < 3; j++) {
-            sendString = "";
-            sendString += j.toString() + "+";
+          for (int j = 0; j < 3; j++) {
+            sendStrings.add("");
+            sendStrings[j] += j.toString() + "+";
             for (int i = 0; i < 16; i++) {
-              sendString += rnd.nextInt(2).toString();
+              sendStrings[j] += rnd.nextInt(2).toString();
             }
-            sendString += j.toString() + "-";
-         // widget.bluetoothManager.write(sendString);
+            sendStrings[j] += j.toString() + "-";
+            Future.delayed(Duration(milliseconds: 200* (j + 1)), () {
+              widget.bluetoothManager.write(sendStrings[j]);
+            });
           }
-          widget.bluetoothManager.write("hi");
         },
       ),
     );
