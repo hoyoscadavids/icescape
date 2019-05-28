@@ -148,9 +148,9 @@ class _HomePageState extends State<HomePage> {
               sendString += rnd.nextInt(2).toString();
             }
             sendString += j.toString() + "-";
-          widget.bluetoothManager.write(sendString);
+         // widget.bluetoothManager.write(sendString);
           }
-
+          widget.bluetoothManager.write("hi");
         },
       ),
     );
