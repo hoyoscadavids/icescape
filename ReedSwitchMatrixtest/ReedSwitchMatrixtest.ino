@@ -39,6 +39,7 @@ void setPinLow(int pin){
    bool PinLevel = !isPin;
    
 <<<<<<< HEAD
+<<<<<<< HEAD
    digitalWrite(i+22, PinLevel);
   }
 <<<<<<< HEAD
@@ -49,10 +50,15 @@ void setPinLow(int pin){
         digitalWrite(i+22, PinLevel);
     }
 >>>>>>> parent of a5c3edd... Merge branch 'master' of https://github.com/hoyoscadavids/icescape
+=======
+   digitalWrite(i+22, PinLevel);
+  }
+>>>>>>> parent of 7d1415a... Update ReedSwitchMatrixtest.ino
 }
 
 void colorWipe(uint32_t c, uint8_t wait) {
   int i;
+<<<<<<< HEAD
 
 <<<<<<< HEAD
   for (i=0; i < strip.numPixels(); i++) {
@@ -69,33 +75,38 @@ void colorWipe(uint32_t c, uint8_t wait) {
         delay(wait);
     }
 >>>>>>> parent of a5c3edd... Merge branch 'master' of https://github.com/hoyoscadavids/icescape
+=======
+
+  for (i=0; i < strip.numPixels(); i++) {
+      strip.setPixelColor(i, c);
+      strip.show();
+      delay(wait);
+  }
+>>>>>>> parent of 7d1415a... Update ReedSwitchMatrixtest.ino
 }
 
 void loop() {
-  int j;
-    String data = BTSerial.readStringUntil('\n');
-    if (data.length() > 0){
-        array[48] = {'data'}; // dann sortieren und überschüssige Einträge löschen
-        for (j = 0; j < 48; j++) {
-            Serial.println(array[j]);
-        //Serial1.println("I got this String: ");
-        //Serial1.println(data);
-    }
-    colorWipe(strip.Color(  127,   127, 127), 50);
-        for(int zeile = 0; zeile < 10; zeile++) {
-            setPinLow(zeile);
-            for(int i=0; i<5; i++){
-                Serial1.print(digitalRead(2 + i));
-                if (digitalRead == LOW){
-                    strip.setPixelColor(i , 0, 127, 127); //einzelne Led ansteuern
-                    strip.show(); 
-                }
-             
+ String data = BTSerial.readStringUntil('\n');
+ if (data.length() > 0){
+        Serial1.println("I got this String: ");
+        Serial1.println(data);
+ }
+  colorWipe(strip.Color(  127,   127, 127), 50);
+    for(int zeile = 0; zeile < 10; zeile++) {
+        setPinLow(zeile);
+        for(int i=0; i<5; i++){
+            Serial1.print( digitalRead(2 + i) );
+            if (digitalRead == LOW){
+              strip.setPixelColor(22+i, 0, 127, 127);
+              strip.show(); 
             }
-        Serial1.println("");
+             
         }
+        Serial1.println("");
+    }
     Serial1.println("---------------------------");
     delay(500);
+<<<<<<< HEAD
     }
 <<<<<<< HEAD
     Serial.println("");
@@ -180,4 +191,53 @@ void loop() {
 =======
 >>>>>>> parent of a5c3edd... Merge branch 'master' of https://github.com/hoyoscadavids/icescape
 }
+=======
+}
+/*
+ for (int i = 0; i < 10; i++){
+   setPinHigh(i);
+
+   for (int j = 2; j < 7; j++){
+
+     if (i == 0){
+       Serial.print("Zeile 1 / ");
+     if (i == 1){
+       Serial.print("Zeile 2 / ");
+     if (i == 2){
+       Serial.print("Zeile 3 / ");
+     if (i == 3){
+       Serial.print("Zeile 4 / ");
+     if (i == 4){
+       Serial.print("Zeile 5 / ");
+     if (i == 5){
+       Serial.print("Zeile 6 / ");
+     if (i == 6){
+       Serial.print("Zeile 7 / ");
+     if (i == 7){
+       Serial.print("Zeile 8 / ");
+     if (i == 8){
+       Serial.print("Zeile 9 / ");  
+     }else{
+       Serial.print("Zeile 10 / ");
+     }
+     if (j == 2){
+       Serial.print("Spalte a: ");
+     if (j == 3){
+       Serial.print("Spalte b: ");
+     if (j == 4){
+       Serial.print("Spalte c: ");
+     if (j == 5){
+       Serial.print("Spalte d: ");
+     }else{
+       Serial.print("Spalte e: ");
+     }
+
+     Serial.println(digitalRead(j));
+
+   }
+ }
+
+ delay(500);
+}
+>>>>>>> parent of 7d1415a... Update ReedSwitchMatrixtest.ino
 */
