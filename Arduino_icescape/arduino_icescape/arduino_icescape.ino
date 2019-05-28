@@ -67,7 +67,7 @@ void loop() {
 }
  
 
-  for(int zeile = 0; zeile < 10; zeile++) {
+/*  for(int zeile = 0; zeile < 10; zeile++) {
     setPinLow(zeile);
     for(int i=0; i<5; i++){
         Serial.print( digitalRead(2 + i) );
@@ -80,9 +80,9 @@ void loop() {
     Serial.println("");
   }
   Serial.println("---------------------------");
-  delay(200);
+  //delay(200);
 
-
+*/
 }
 /*
  for (int i = 0; i < 10; i++){
