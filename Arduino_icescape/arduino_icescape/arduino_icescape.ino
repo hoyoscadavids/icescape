@@ -7,6 +7,7 @@ int dataPin  = 8;
 int clockPin = 9;
 LPD8806 strip = LPD8806(nLEDs, dataPin, clockPin);
 
+char ledArray[48];
 
 void setup() {
  BTSerial.begin(BAUD);
@@ -17,7 +18,7 @@ void setup() {
  pinMode(4, INPUT_PULLUP);
  pinMode(5, INPUT_PULLUP);
  pinMode(6, INPUT_PULLUP);
- 
+  
  pinMode(22, OUTPUT);
  pinMode(23, OUTPUT);
  pinMode(24, OUTPUT);
@@ -29,9 +30,10 @@ void setup() {
  pinMode(30, OUTPUT);
  pinMode(31, OUTPUT);
 
+
  strip.begin();
  strip.show();
- colorWipe(strip.Color(  127,   127, 127), 50);
+ colorWipe(strip.Color(  255,   200, 245), 50);
 }
 
 void setPinLow(int pin){
@@ -60,19 +62,51 @@ void loop() {
  
  if(BTSerial.available()){
   String data = BTSerial.readStringUntil('\n');
+  bool started = false;
+  int nextIndex = 0;
+  char start = '+', finish = '-';
    if (data.length() > 0){
-        Serial.println("I got this String: ");
-        Serial.println(data);
+         for(int i = 0; i < data.length(); i++){
+             
+             if(data.charAt(i) == finish){
+                started = false;
+              }
+            
+           if(started == true){
+             
+                ledArray[nextIndex] = data.charAt(i);
+                nextIndex++;
+              }
+             if(data.charAt(i) == start){
+                started = true;
+              }
+           
+    }   
+    for(int i = 0; i < 96; i+=2){
+      if(ledArray[i/2] == '1'){
+        strip.setPixelColor(i, 255, 200, 245);
+        strip.setPixelColor(i+1, 255, 200, 245);
+        }
+       else if(ledArray[i/2] == '0'){
+        strip.setPixelColor(i, 0, 50, 255);
+        strip.setPixelColor(i+1, 0, 50, 255);
+        }
+       
+          strip.show();
+      }
+      // Serial.write(ledArray);   
+     //  Serial.println("I got this String: ");
+        
  }
 }
  
 
-/*  for(int zeile = 0; zeile < 10; zeile++) {
+  /*for(int zeile = 0; zeile < 10; zeile++) {
     setPinLow(zeile);
     for(int i=0; i<5; i++){
         Serial.print( digitalRead(2 + i) );
         if (digitalRead == LOW){
- //         strip.setPixelColor(22+i, 0, 127, 127);
+ //         strip.setPixelColor(40, 0, 127, 127);
  //         strip.show(); 
         }
          
@@ -80,54 +114,7 @@ void loop() {
     Serial.println("");
   }
   Serial.println("---------------------------");
-  //delay(200);
+  //delay(200);*/
 
-*/
+
 }
-/*
- for (int i = 0; i < 10; i++){
-   setPinHigh(i);
-
-   for (int j = 2; j < 7; j++){
-
-     if (i == 0){
-       Serial.print("Zeile 1 / ");
-     if (i == 1){
-       Serial.print("Zeile 2 / ");
-     if (i == 2){
-       Serial.print("Zeile 3 / ");
-     if (i == 3){
-       Serial.print("Zeile 4 / ");
-     if (i == 4){
-       Serial.print("Zeile 5 / ");
-     if (i == 5){
-       Serial.print("Zeile 6 / ");
-     if (i == 6){
-       Serial.print("Zeile 7 / ");
-     if (i == 7){
-       Serial.print("Zeile 8 / ");
-     if (i == 8){
-       Serial.print("Zeile 9 / ");  
-     }else{
-       Serial.print("Zeile 10 / ");
-     }
-     if (j == 2){
-       Serial.print("Spalte a: ");
-     if (j == 3){
-       Serial.print("Spalte b: ");
-     if (j == 4){
-       Serial.print("Spalte c: ");
-     if (j == 5){
-       Serial.print("Spalte d: ");
-     }else{
-       Serial.print("Spalte e: ");
-     }
-
-     Serial.println(digitalRead(j));
-
-   }
- }
-
- delay(500);
-}
-*/

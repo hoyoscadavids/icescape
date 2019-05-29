@@ -146,7 +146,7 @@ class _HomePageState extends State<HomePage> {
             for (int i = 0; i < 16; i++) {
               sendStrings[j] += rnd.nextInt(2).toString();
             }
-            sendStrings[j] += j.toString() + "-";
+            sendStrings[j] += "-";
             Future.delayed(Duration(milliseconds: 200* (j + 1)), () {
               widget.bluetoothManager.write(sendStrings[j]);
             });
