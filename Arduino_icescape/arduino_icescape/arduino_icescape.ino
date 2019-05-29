@@ -8,6 +8,7 @@ int clockPin = 9;
 LPD8806 strip = LPD8806(nLEDs, dataPin, clockPin);
 
 char ledArray[48];
+int reedArray[48];
 
 void setup() {
  BTSerial.begin(BAUD);
@@ -101,20 +102,28 @@ void loop() {
 }
  
 
-  /*for(int zeile = 0; zeile < 10; zeile++) {
-    setPinLow(zeile);
-    for(int i=0; i<5; i++){
-        Serial.print( digitalRead(2 + i) );
-        if (digitalRead == LOW){
- //         strip.setPixelColor(40, 0, 127, 127);
- //         strip.show(); 
-        }
-         
+  for(int row = 0; row < 10; row++) {
+    setPinLow(row);
+    for(int element=0; element<5; element++){
+        Serial.print(digitalRead(2 + element));
+        reedArray[element+(row*sizeof(element))] = digitalRead(2+element);
+          
+
+        
     }
+    for(int i=0; i<48; i++){
+      if(reedArray[i]== '0' && reedArray[i]==ledArray[i]){
+        strip.setPixelColor(2*i, 255, 0, 0);
+        strip.setPixelColor(2*i+1, 255, 0, 0);
+        
+        }
+     }
+         
+    
     Serial.println("");
   }
   Serial.println("---------------------------");
-  //delay(200);*/
+  //delay(200);
 
 
 }
