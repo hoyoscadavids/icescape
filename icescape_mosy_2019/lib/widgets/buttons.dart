@@ -17,7 +17,7 @@ class PrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: FlatButton(
+      child: RaisedButton(
         onPressed: onPressed,
         color: color,
         child: Text(
