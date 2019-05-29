@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:icescape_mosy_2019/widgets/buttons.dart';
-import 'package:icescape_mosy_2019/pages/home_page.dart';
+import 'package:icescape_mosy_2019/pages/game_page.dart';
 import 'package:icescape_mosy_2019/utilities/bluetooth_manager.dart';
 import "package:flare_flutter/flare_actor.dart";
 
@@ -51,7 +51,7 @@ class _StartPageState extends State<StartPage> {
                             ? () => Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => HomePage(
+                                    builder: (context) => GamePage(
                                           bluetoothManager: manager,
                                         ),
                                   ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:icescape_mosy_2019/pages/home_page.dart';
+import 'package:icescape_mosy_2019/pages/game_page.dart';
 import 'package:icescape_mosy_2019/themes/main_theme.dart';
 import 'package:icescape_mosy_2019/pages/start_page.dart';
 
@@ -27,6 +27,6 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
  @override
   Widget build(BuildContext context) {
-    return HomePage();
+    return GamePage();
   }
 }
