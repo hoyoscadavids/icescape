@@ -58,10 +58,10 @@ void colorWipe(uint32_t c, uint8_t wait) {
 
   for (i = 0; i < strip.numPixels(); i++) {
     strip.setPixelColor(i, c);
-    strip.show();
+    strip.show();  
     //     delay(wait);
   }
-
+  
 }
 
 void showRoute() {
@@ -106,6 +106,7 @@ void loop() {
 
     Serial.println("");
   }
+  
   int helperIndex = 0, offset = 0, elementCounter = 0;
   for (int row = 0; row < 10; row++) {
     helperIndex = 0;
@@ -135,14 +136,14 @@ void loop() {
         colorWipe(strip.Color(0, 50, 255), 50);
       }
       else if (reedArray[index] == 0 && ledArray[index] == '1') {
-         if(row == 9){
-         colorWipe(strip.Color(0, 50, 0), 50);
-         delay(1000);
-         colorWipe(strip.Color(0, 50, 255), 50);
-      }
-      else{
-        strip.setPixelColor(index * 2 ,  255, 200, 245);
-        strip.setPixelColor(index * 2 + 1,  255, 200, 245);
+        if (row == 9 || row == 8 && (element == 3 || element == 4)) {
+          colorWipe(strip.Color(0, 50, 0), 50);
+          delay(1000);
+          colorWipe(strip.Color(0, 50, 255), 50);
+        }
+        else {
+          strip.setPixelColor(index * 2 ,  255, 200, 245);
+          strip.setPixelColor(index * 2 + 1,  255, 200, 245);
         }
       }
       elementCounter++;

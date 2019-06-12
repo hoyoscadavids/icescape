@@ -28,13 +28,13 @@ class _GamePageState extends State<GamePage> {
   bool gameStarted = false;
 
   void _onStart() {
-    if(!gameStarted){
+    if (!gameStarted) {
       _sendMatrix();
     }
     gameStarted = !gameStarted;
   }
 
-  void _sendMatrix(){
+  void _sendMatrix() {
     // Sends the Matrix to the Arduino Bluetooth with the following Format:
     // 0+0000000000000000-
     // This protocol sends three Strings, each containing 16 values from the matrix between the + and -.
@@ -43,40 +43,48 @@ class _GamePageState extends State<GamePage> {
     // String length that the HM - 10 Bluetooth module provides.
 
     List<String> sendStrings = List<String>.generate(3, (sendString) => "");
-      indexRow = 0;
-      indexColumn = 0;
-      int reversedColumnIndex = 0;
-      for(int i = 0; i < 3; i ++){
-        sendStrings[i] += i.toString() + "+";
-        for(int j = 0; j < 16; j ++){
-          if(indexColumn >= rowCount){
-            reversedColumn = !reversedColumn;
-            reversedColumnIndex = reversedColumn ? rowCount - 1 : 0;
-            indexColumn = 0;
-            indexRow++;
-          }
-          if(!(indexColumn == 0 && indexRow == 3 || indexColumn == 0 && indexRow == 6)){
-            sendStrings[i] += pressedButtonsMatrix[indexRow][reversedColumnIndex] ? "1" :"0";
-          }
-          else j--;
-          indexColumn ++;
-          if(reversedColumn) reversedColumnIndex --;
-          else reversedColumnIndex++;
+    indexRow = 0;
+    indexColumn = 0;
+    int reversedColumnIndex = 0;
+    for (int i = 0; i < 3; i++) {
+      sendStrings[i] += i.toString() + "+";
+      for (int j = 0; j < 16; j++) {
+        if (indexColumn >= rowCount) {
+          reversedColumn = !reversedColumn;
+          reversedColumnIndex = reversedColumn ? rowCount - 1 : 0;
+          indexColumn = 0;
+          indexRow++;
         }
-
-        sendStrings[i] += "-";
-        Future.delayed(Duration(milliseconds: 200 * (i+ 1)), () {
-          widget.bluetoothManager.write(sendStrings[i]);
-        });
+        if (!(indexColumn == 0 && indexRow == 3 ||
+            indexColumn == 0 && indexRow == 6)) {
+          sendStrings[i] +=
+              pressedButtonsMatrix[indexRow][reversedColumnIndex] ? "1" : "0";
+        } else
+          j--;
+        indexColumn++;
+        if (reversedColumn)
+          reversedColumnIndex--;
+        else
+          reversedColumnIndex++;
       }
-      reversedColumn = false;
+
+      sendStrings[i] += "-";
+      Future.delayed(Duration(milliseconds: 200 * (i + 1)), () {
+        widget.bluetoothManager.write(sendStrings[i]);
+      });
+    }
+    reversedColumn = false;
   }
 
   void _onReset() {
     setState(() {
-      pressedButtonsMatrix.clear();
-      pressedButtonsMatrix = List<List<bool>>.generate(rowCount,
-          (buttonRow) => List<bool>.generate(columnCount, (button) => false));
+      pressedButtonsMatrix.map((buttons) {
+        buttons.map((button) {
+          setState(() {
+            button = false;
+          });
+        });
+      });
     });
   }
 
@@ -177,6 +185,14 @@ class _GamePageState extends State<GamePage> {
     final widthDivider = 12;
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
         title: Text(
           "Icescape",
           textAlign: TextAlign.center,
@@ -202,7 +218,7 @@ class _GamePageState extends State<GamePage> {
                 children: <Widget>[
                   PrimaryButton(
                     text: "Reset",
-                    onPressed: _onReset,
+                    onPressed: null//_onReset,
                   ),
                   PrimaryButton(
                     text: "Start",

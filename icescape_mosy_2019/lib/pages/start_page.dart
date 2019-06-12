@@ -48,7 +48,7 @@ class _StartPageState extends State<StartPage> {
                       PrimaryButton(
                         text: "Start Game",
                         onPressed: isConnected
-                            ? () => Navigator.pushReplacement(
+                            ? () => Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => GamePage(
