@@ -5,18 +5,21 @@ class PrimaryButton extends StatelessWidget {
   final Color color;
   final String text;
   final Color textColor;
+  final double size;
 
   const PrimaryButton(
       {Key key,
       this.onPressed,
       this.color = Colors.lightBlue,
       this.text,
-      this.textColor = Colors.white})
+      this.textColor = Colors.white,
+      this.size})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: size,
       child: RaisedButton(
         onPressed: onPressed,
         color: color,
@@ -24,7 +27,7 @@ class PrimaryButton extends StatelessWidget {
           text,
           style: TextStyle(color: Colors.white),
         ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: BeveledRectangleBorder(borderRadius: BorderRadius.circular(10)),
         disabledColor: Colors.black26,
       ),
     );

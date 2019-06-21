@@ -14,7 +14,8 @@ class BluetoothManager {
   BluetoothState state = BluetoothState.unknown;
 
   BluetoothDevice device;
-  bool get isConnected => (device != null);
+  bool _isConnected = false;
+  bool get isConnected => _isConnected;
   StreamSubscription deviceConnection;
   StreamSubscription deviceStateSubscription;
   List<BluetoothService> services = new List();
@@ -67,10 +68,10 @@ class BluetoothManager {
     device.state.then((s) {
       deviceState = s;
     });
-
     deviceStateSubscription = device.onStateChanged().listen((s) {
       deviceState = s;
       if (s == BluetoothDeviceState.connected) {
+        _isConnected = true;
         device.discoverServices().then((s) {
           services = s;
           BluetoothService sendService = services.firstWhere((element) =>

@@ -1,9 +1,9 @@
 import 'dart:math';
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:icescape_mosy_2019/widgets/hexagonal_button.dart';
 import 'package:icescape_mosy_2019/utilities/bluetooth_manager.dart';
 import 'package:icescape_mosy_2019/widgets/buttons.dart';
+import 'package:flutter/services.dart';
 
 class GamePage extends StatefulWidget {
   final BluetoothManager bluetoothManager;
@@ -26,6 +26,7 @@ class _GamePageState extends State<GamePage> {
   int indexRow = 0, indexColumn = 0, indexInField = 0;
   bool reversedColumn = false;
   bool gameStarted = false;
+  bool firstBuild;
 
   void _onStart() {
     if (!gameStarted) {
@@ -78,13 +79,32 @@ class _GamePageState extends State<GamePage> {
 
   void _onReset() {
     setState(() {
-      pressedButtonsMatrix.map((buttons) {
-        buttons.map((button) {
-          setState(() {
-            button = false;
-          });
-        });
-      });
+      for (int i = 0; i < pressedButtonsMatrix.length; i++) {
+        for (int j = 0; j < pressedButtonsMatrix[i].length; j++) {
+          pressedButtonsMatrix[i][j] = false;
+        }
+      }
+    });
+  }
+
+  void _onRandomize() {
+    _onReset();
+    setState(() {
+      int actualPlace = -1;
+      Random rnd = Random();
+      for (int i = 0; i < pressedButtonsMatrix.length; i++) {
+        if (actualPlace == -1) actualPlace = rnd.nextInt(5);
+        if (i % 2 == 0) {
+          if (actualPlace != 4) actualPlace = actualPlace + (rnd.nextInt(2));
+        } else {
+          if (actualPlace == 4)
+            actualPlace = actualPlace + (-1 + rnd.nextInt(2));
+          else if (actualPlace != 0 && actualPlace != 4)
+            actualPlace = actualPlace + (-1 + rnd.nextInt(2));
+        }
+        if (actualPlace == 4 && i == 3) actualPlace = 3;
+        pressedButtonsMatrix[i][actualPlace] = true;
+      }
     });
   }
 
@@ -172,18 +192,47 @@ class _GamePageState extends State<GamePage> {
   @override
   void initState() {
     super.initState();
+    firstBuild = true;
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
   }
 
   @override
   void dispose() {
     super.dispose();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
   }
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final widthDivider = 12;
+    if (firstBuild) {
+      firstBuild = false;
+      Future.delayed(Duration.zero, () {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("Icescape!"),
+                content: Text("Help Bob and Larry get to the other Side!\n"
+                    "Tap the hexagon shaped ice tiles in order to create a path"),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text("Ok"),
+                    onPressed: () => Navigator.pop(context),
+                  )
+                ],
+              );
+            });
+      });
+    }
+
     return Scaffold(
+      backgroundColor: Colors.blue.withOpacity(0.7),
       appBar: AppBar(
         leading: IconButton(
             icon: Icon(
@@ -198,12 +247,11 @@ class _GamePageState extends State<GamePage> {
           textAlign: TextAlign.center,
         ),
       ),
-      body: Column(
+      body: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.fromLTRB(
-                width / widthDivider, 0, width / widthDivider, 0),
+            padding: EdgeInsets.symmetric(horizontal: width / 8.5),
             child: SingleChildScrollView(
               child: Row(
                 children: <Widget>[]..addAll(_buildGrid(columnCount, width)),
@@ -211,21 +259,22 @@ class _GamePageState extends State<GamePage> {
             ),
           ),
         ]..add(
-            Padding(
-              padding: const EdgeInsets.only(top: 24),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  PrimaryButton(
-                    text: "Reset",
-                    onPressed: null//_onReset,
-                  ),
-                  PrimaryButton(
-                    text: "Start",
-                    onPressed: _onStart,
-                  ),
-                ],
-              ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                PrimaryButton(
+                  text: "Start",
+                  onPressed: _onStart,
+                ),
+                PrimaryButton(
+                  text: "Randomize",
+                  onPressed: _onRandomize,
+                ),
+                PrimaryButton(
+                  text: "Reset",
+                  onPressed: _onReset,
+                ),
+              ],
             ),
           ),
       ),

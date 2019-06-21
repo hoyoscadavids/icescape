@@ -1,3 +1,4 @@
+
 #include "LPD8806.h"
 #define BTSerial Serial1
 #define BAUD 115200
@@ -12,7 +13,6 @@ int reedArray[48];
 bool reversedRow = false;
 
 void setup() {
-
   for (int i = 0; i < 48; i ++) {
     reedArray[i] = 1;
     ledArray[i] = '1';
@@ -58,10 +58,22 @@ void colorWipe(uint32_t c, uint8_t wait) {
 
   for (i = 0; i < strip.numPixels(); i++) {
     strip.setPixelColor(i, c);
-    strip.show();  
+    strip.show();
     //     delay(wait);
   }
-  
+
+}
+
+void lost(int index) {
+  strip.setPixelColor(index * 2 , 255, 0, 0);
+  strip.setPixelColor(index * 2 + 1, 255, 0, 0);
+  colorWipe(strip.Color(255, 0, 0), 50);
+  delay(2000);
+  colorWipe(strip.Color(0, 50, 255), 50);
+  delay(200);
+  showRoute();
+  delay(2000);
+  colorWipe(strip.Color(0, 50, 255), 50);
 }
 
 void showRoute() {
@@ -102,11 +114,9 @@ void loop() {
       delay(5000);
       colorWipe(strip.Color(0, 50, 255), 50);
     }
-
-
     Serial.println("");
   }
-  
+
   int helperIndex = 0, offset = 0, elementCounter = 0;
   for (int row = 0; row < 10; row++) {
     helperIndex = 0;
@@ -124,24 +134,19 @@ void loop() {
         helperIndex -= 2;
       }
       reedArray[index - offset] = digitalRead(2 + element);
-      if (reedArray[index] == 0 && ledArray[index] == '0') {
-        strip.setPixelColor(index * 2 , 255, 0, 0);
-        strip.setPixelColor(index * 2 + 1, 255, 0, 0);
-        colorWipe(strip.Color(255, 0, 0), 50);
-        delay(2000);
-        colorWipe(strip.Color(0, 50, 255), 50);
-        delay(200);
-        showRoute();
-        delay(2000);
-        colorWipe(strip.Color(0, 50, 255), 50);
+      if ((reedArray[index] == 0 && ledArray[index] == '0')) {
+        // If the field is wrong
+        lost(index);
       }
-      else if (reedArray[index] == 0 && ledArray[index] == '1') {
-        if (row == 9 || row == 8 && (element == 3 || element == 4)) {
+      else if ((reedArray[index] == 0 && ledArray[index] == '1' )) {
+        if ((row == 9 || row == 8 && (element == 3 || element == 4))) {
+          // If the player comes to the last field: Displays Green
           colorWipe(strip.Color(0, 50, 0), 50);
           delay(1000);
           colorWipe(strip.Color(0, 50, 255), 50);
         }
         else {
+          // Color the Field White when the movement was correct
           strip.setPixelColor(index * 2 ,  255, 200, 245);
           strip.setPixelColor(index * 2 + 1,  255, 200, 245);
         }
