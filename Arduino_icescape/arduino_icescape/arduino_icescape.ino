@@ -3,6 +3,7 @@
 #define BTSerial Serial1
 #define BAUD 115200
 
+// LED initialization
 int nLEDs = 96;
 int dataPin  = 8;
 int clockPin = 9;
@@ -20,12 +21,12 @@ void setup() {
   BTSerial.begin(BAUD);
   Serial.begin(BAUD);
 
+  // Initialize pins for the Matrix
   pinMode(2, INPUT_PULLUP);
   pinMode(3, INPUT_PULLUP);
   pinMode(4, INPUT_PULLUP);
   pinMode(5, INPUT_PULLUP);
   pinMode(6, INPUT_PULLUP);
-
   pinMode(22, OUTPUT);
   pinMode(23, OUTPUT);
   pinMode(24, OUTPUT);
@@ -37,7 +38,6 @@ void setup() {
   pinMode(30, OUTPUT);
   pinMode(31, OUTPUT);
 
-
   strip.begin();
   strip.show();
   colorWipe(strip.Color(0, 50, 255), 50);
@@ -47,19 +47,19 @@ void setPinLow(int pin) {
   for (int i = 0; i < 10; i++) {
     bool isPin = (i == pin);
     bool PinLevel = !isPin;
-
     digitalWrite(i + 22, PinLevel);
   }
-
 }
 
 void colorWipe(uint32_t c, uint8_t wait) {
+  // Colors the whole field
   int i;
 
   for (i = 0; i < strip.numPixels(); i++) {
+    // Change the color of all the LEDS.
+    // strip.show() is called every time to give a slow wipe effect
     strip.setPixelColor(i, c);
     strip.show();
-    //     delay(wait);
   }
 
 }
@@ -92,6 +92,13 @@ void showRoute() {
 
 void loop() {
   if (BTSerial.available()) {
+    // If there's data to read from the bluetooth, then pack it in the 
+    // LED array
+    // The data comes in the form 0+0000000000000000-
+    // The number before the "+" means the order of the positions in the matrix (0 - 2)
+    // The next 16 binary numbers describe if the LED should be on or off (16 * 3 = 48 Fields)
+    // The "-" represents the end of the String
+    // 
     String data = BTSerial.readStringUntil('\n');
     bool started = false;
     int nextIndex = 0;
@@ -119,6 +126,7 @@ void loop() {
 
   int helperIndex = 0, offset = 0, elementCounter = 0;
   for (int row = 0; row < 10; row++) {
+    // Check the whole matrix to get the player's position
     helperIndex = 0;
     helperIndex = (row % 2 == 0) ? 0 : 4;
     setPinLow(row);
